@@ -1,0 +1,31 @@
+{
+  "name": "ShopWise Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/shopwise",
+  "overrideCommand": false,
+  "forwardPorts": [3000, 5100, 5432],
+  "portsAttributes": {
+    "3000": { "label": "Frontend", "onAutoForward": "openBrowser" },
+    "5100": { "label": "API / Swagger" },
+    "5432": { "label": "PostgreSQL" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[csharp]": { "editor.defaultFormatter": "ms-dotnettools.csharp" }
+      }
+    }
+  }
+}
