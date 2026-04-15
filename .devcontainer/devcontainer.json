@@ -3,6 +3,9 @@
   "dockerComposeFile": "../docker-compose.yml",
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/shopwise",
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": { "version": "8" }
+  },
   "overrideCommand": false,
   "forwardPorts": [3000, 5100, 5432],
   "portsAttributes": {
