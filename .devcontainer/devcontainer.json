@@ -4,7 +4,7 @@
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/shopwise",
   "features": {
-    "ghcr.io/devcontainers/features/dotnet:2": { "version": "8" }
+    "ghcr.io/devcontainers/features/dotnet:2": { "version": "8.0" }
   },
   "overrideCommand": false,
   "forwardPorts": [3000, 5100, 5432],
