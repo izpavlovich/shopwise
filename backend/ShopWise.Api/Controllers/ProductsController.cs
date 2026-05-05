@@ -41,4 +41,19 @@ public class ProductsController : ControllerBase
         var deleted = await _products.DeleteAsync(id);
         return deleted ? NoContent() : NotFound();
     }
+
+    [HttpPost("{id}/generate-image")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GenerateImage(int id, CancellationToken ct)
+    {
+        try
+        {
+            var updated = await _products.GenerateImageAsync(id, ct);
+            return updated is null ? NotFound() : Ok(updated);
+        }
+        catch (ImageGenerationException ex)
+        {
+            return StatusCode(ex.StatusCode, new { error = ex.Message });
+        }
+    }
 }

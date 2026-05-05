@@ -20,6 +20,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddHttpClient<ImageGenerationService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -53,6 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

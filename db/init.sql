@@ -108,26 +108,26 @@ INSERT INTO categories (name, description) VALUES
     ('Books', 'Fiction, non-fiction, technical, and more');
 
 INSERT INTO products (category_id, name, description, price, stock, image_url) VALUES
-    (1, 'Wireless Headphones', 'Over-ear noise cancelling headphones with 30h battery', 89.99, 45, 'https://picsum.photos/seed/headphones/400/300'),
-    (1, 'USB-C Hub', '7-in-1 hub with HDMI, USB 3.0, SD card reader', 34.99, 120, 'https://picsum.photos/seed/hub/400/300'),
-    (1, 'Mechanical Keyboard', 'Compact 75% layout, Cherry MX Blue switches', 129.99, 30, 'https://picsum.photos/seed/keyboard/400/300'),
-    (1, 'Webcam 1080p', 'Full HD webcam with built-in microphone and autofocus', 59.99, 75, 'https://picsum.photos/seed/webcam/400/300'),
-    (1, 'Smart Watch', 'Fitness tracker with heart rate monitor and GPS', 199.99, 20, 'https://picsum.photos/seed/watch/400/300'),
-    (1, 'Portable SSD 1TB', 'USB 3.2 Gen 2, up to 1050 MB/s read speed', 109.99, 60, 'https://picsum.photos/seed/ssd/400/300'),
-    (1, 'Bluetooth Speaker', 'Waterproof portable speaker with 360° sound', 49.99, 90, 'https://picsum.photos/seed/speaker/400/300'),
-    (2, 'Classic White Tee', '100% organic cotton, unisex fit', 19.99, 200, 'https://picsum.photos/seed/tee/400/300'),
-    (2, 'Slim Fit Jeans', 'Dark wash denim, stretch fabric', 54.99, 80, 'https://picsum.photos/seed/jeans/400/300'),
-    (2, 'Hooded Sweatshirt', 'Fleece-lined hoodie, kangaroo pocket', 39.99, 150, 'https://picsum.photos/seed/hoodie/400/300'),
-    (2, 'Running Shoes', 'Lightweight mesh upper, cushioned sole', 84.99, 40, 'https://picsum.photos/seed/shoes/400/300'),
-    (2, 'Wool Beanie', '100% merino wool, one size fits all', 14.99, 300, 'https://picsum.photos/seed/beanie/400/300'),
-    (2, 'Leather Belt', 'Full-grain leather, brass buckle', 29.99, 100, 'https://picsum.photos/seed/belt/400/300'),
-    (3, 'Clean Code', 'A Handbook of Agile Software Craftsmanship — Robert C. Martin', 34.99, 50, 'https://picsum.photos/seed/cleancode/400/300'),
-    (3, 'Designing Data-Intensive Applications', 'Martin Kleppmann — the definitive guide to data systems', 44.99, 35, 'https://picsum.photos/seed/ddia/400/300'),
-    (3, 'The Pragmatic Programmer', '20th Anniversary Edition — Hunt & Thomas', 39.99, 45, 'https://picsum.photos/seed/pragprog/400/300'),
-    (3, 'Atomic Habits', 'Tiny changes, remarkable results — James Clear', 16.99, 120, 'https://picsum.photos/seed/atomichabits/400/300'),
-    (3, 'Refactoring', '2nd Edition — Martin Fowler', 49.99, 25, 'https://picsum.photos/seed/refactoring/400/300'),
-    (3, 'The Phoenix Project', 'A novel about IT, DevOps, and helping your business win', 14.99, 70, 'https://picsum.photos/seed/phoenix/400/300'),
-    (3, 'System Design Interview', 'An Insider''s Guide — Alex Xu, Volume 1', 29.99, 55, 'https://picsum.photos/seed/systemdesign/400/300');
+    (1, 'Wireless Headphones', 'Over-ear noise cancelling headphones with 30h battery', 89.99, 45, '/images/1.png'),
+    (1, 'USB-C Hub', '7-in-1 hub with HDMI, USB 3.0, SD card reader', 34.99, 120, '/images/2.png'),
+    (1, 'Mechanical Keyboard', 'Compact 75% layout, Cherry MX Blue switches', 129.99, 30, '/images/3.png'),
+    (1, 'Webcam 1080p', 'Full HD webcam with built-in microphone and autofocus', 59.99, 75, '/images/4.png'),
+    (1, 'Smart Watch', 'Fitness tracker with heart rate monitor and GPS', 199.99, 20, '/images/5.png'),
+    (1, 'Portable SSD 1TB', 'USB 3.2 Gen 2, up to 1050 MB/s read speed', 109.99, 60, '/images/6.png'),
+    (1, 'Bluetooth Speaker', 'Waterproof portable speaker with 360° sound', 49.99, 90, '/images/7.png'),
+    (2, 'Classic White Tee', '100% organic cotton, unisex fit', 19.99, 200, '/images/8.png'),
+    (2, 'Slim Fit Jeans', 'Dark wash denim, stretch fabric', 54.99, 80, '/images/9.png'),
+    (2, 'Hooded Sweatshirt', 'Fleece-lined hoodie, kangaroo pocket', 39.99, 150, '/images/10.png'),
+    (2, 'Running Shoes', 'Lightweight mesh upper, cushioned sole', 84.99, 40, '/images/11.png'),
+    (2, 'Wool Beanie', '100% merino wool, one size fits all', 14.99, 300, '/images/12.png'),
+    (2, 'Leather Belt', 'Full-grain leather, brass buckle', 29.99, 100, '/images/13.png'),
+    (3, 'Clean Code', 'A Handbook of Agile Software Craftsmanship — Robert C. Martin', 34.99, 50, '/images/14.png'),
+    (3, 'Designing Data-Intensive Applications', 'Martin Kleppmann — the definitive guide to data systems', 44.99, 35, '/images/15.png'),
+    (3, 'The Pragmatic Programmer', '20th Anniversary Edition — Hunt & Thomas', 39.99, 45, '/images/16.png'),
+    (3, 'Atomic Habits', 'Tiny changes, remarkable results — James Clear', 16.99, 120, '/images/17.png'),
+    (3, 'Refactoring', '2nd Edition — Martin Fowler', 49.99, 25, '/images/18.png'),
+    (3, 'The Phoenix Project', 'A novel about IT, DevOps, and helping your business win', 14.99, 70, '/images/19.png'),
+    (3, 'System Design Interview', 'An Insider''s Guide — Alex Xu, Volume 1', 29.99, 55, '/images/20.png');
 
 -- Passwords are MD5 hashes
 -- admin@shopwise.com  / Admin123!

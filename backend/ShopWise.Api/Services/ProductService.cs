@@ -8,8 +8,15 @@ namespace ShopWise.Api.Services;
 public class ProductService
 {
     private readonly AppDbContext _db;
+    private readonly ImageGenerationService _images;
+    private readonly IWebHostEnvironment _env;
 
-    public ProductService(AppDbContext db) => _db = db;
+    public ProductService(AppDbContext db, ImageGenerationService images, IWebHostEnvironment env)
+    {
+        _db = db;
+        _images = images;
+        _env = env;
+    }
 
     public async Task<List<ProductResponse>> GetAllAsync(string? search = null)
     {
@@ -69,5 +76,32 @@ public class ProductService
         product.IsDeleted = true;
         await _db.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<ProductResponse?> GenerateImageAsync(int id, CancellationToken ct = default)
+    {
+        var product = await _db.Products
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, ct);
+
+        if (product is null) return null;
+
+        var prompt =
+            $"Studio product photograph of {product.Name}. {product.Description}. " +
+            "Centered on a clean white background, soft shadows, e-commerce catalog style, no text, no watermark.";
+
+        var image = await _images.GenerateAsync(prompt, ct);
+
+        var ext = image.MimeType.Contains("jpeg") ? "jpg" : "png";
+        var fileName = $"{product.Id}.{ext}";
+        var dir = Path.Combine(_env.ContentRootPath, "wwwroot", "images");
+        Directory.CreateDirectory(dir);
+        await File.WriteAllBytesAsync(Path.Combine(dir, fileName), image.Bytes, ct);
+
+        product.ImageUrl = $"/images/{fileName}";
+        await _db.SaveChangesAsync(ct);
+
+        return new ProductResponse(product.Id, product.Name, product.Description, product.Price,
+            product.Stock, product.ImageUrl, product.CategoryId, product.Category?.Name ?? "Unknown");
     }
 }
