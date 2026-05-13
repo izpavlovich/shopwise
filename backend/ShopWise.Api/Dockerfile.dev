@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+WORKDIR /src
+COPY *.csproj ./
+RUN dotnet restore
+COPY . .
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+CMD ["dotnet", "watch", "run", "--no-launch-profile", "--non-interactive"]

@@ -15,13 +15,10 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
-    build:
-      context: ./backend/ShopWise.Api
-      dockerfile: Dockerfile.dev
+    build: ./backend/ShopWise.Api
     restart: unless-stopped
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__Default: "Host=db;Database=shopwise;Username=shopwise;Password=shopwise123"
       Jwt__Key: "superSecretKeyThatShouldBeInVaultNotHere"
       Jwt__Issuer: "ShopWise"
@@ -30,36 +27,17 @@ services:
     ports:
       - "5100:8080"
     volumes:
-      - ./backend/ShopWise.Api:/src
-      - api_bin:/src/bin
-      - api_obj:/src/obj
+      - ./backend/ShopWise.Api/wwwroot/images:/app/wwwroot/images
     depends_on:
       - db
 
   frontend:
-    build:
-      context: ./frontend/shopwise-ui
-      dockerfile: Dockerfile.dev
+    build: ./frontend/shopwise-ui
     restart: unless-stopped
-    environment:
-      CHOKIDAR_USEPOLLING: "true"
     ports:
-      - "3000:5173"
-    volumes:
-      - ./frontend/shopwise-ui:/app
-      - /app/node_modules
+      - "3000:80"
     depends_on:
       - api
-
-  devcontainer:
-    image: mcr.microsoft.com/devcontainers/base:ubuntu
-    command: sleep infinity
-    depends_on:
-      - db
-      - api
-      - frontend
 
 volumes:
   postgres_data:
-  api_bin:
-  api_obj:
