@@ -20,6 +20,10 @@ export default defineConfig({
         target: 'http://api:8080',
         changeOrigin: true,
       },
+      '/recommendations': {
+        target: 'http://recommendations:8000',
+        changeOrigin: true,
+      },
     },
   },
 })

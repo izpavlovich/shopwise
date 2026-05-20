@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
+import { fetchRelated } from '../services/recommendations';
+import RecommendationStrip from '../components/RecommendationStrip';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../store/AuthContext';
-import type { Product } from '../types';
+import type { Product, RecommendedProduct } from '../types';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const [related, setRelated] = useState<RecommendedProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const { user } = useAuth();
@@ -20,6 +23,12 @@ export default function ProductDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (!id) return;
+    // Best-effort: a recommendations outage must not break the page.
+    fetchRelated(Number(id)).then(setRelated).catch(() => setRelated([]));
+  }, [id]);
+
   if (loading) return <p>Loading...</p>;
   if (!product) return <p>Product not found.</p>;
 
@@ -30,30 +39,33 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="product-detail">
-      <img src={product.imageUrl ?? ''} alt={product.name} />
-      <div className="detail-info">
-        <span className="category">{product.categoryName}</span>
-        <h1>{product.name}</h1>
-        <p>{product.description}</p>
-        <p className="price">${product.price.toFixed(2)}</p>
-        <p>{product.stock} in stock</p>
-        <p className="line-total">Total: ${product.price * quantity}</p>
-        <div className="quantity-row">
-          <label>Qty:
-            <input
-              type="number"
-              min={1}
-              max={product.stock}
-              value={quantity}
-              onChange={e => setQuantity(Number(e.target.value))}
-            />
-          </label>
-          <button onClick={handleAddToCart} disabled={product.stock === 0}>
-            Add to Cart
-          </button>
+    <>
+      <div className="product-detail">
+        <img src={product.imageUrl ?? ''} alt={product.name} />
+        <div className="detail-info">
+          <span className="category">{product.categoryName}</span>
+          <h1>{product.name}</h1>
+          <p>{product.description}</p>
+          <p className="price">${product.price.toFixed(2)}</p>
+          <p>{product.stock} in stock</p>
+          <p className="line-total">Total: ${product.price * quantity}</p>
+          <div className="quantity-row">
+            <label>Qty:
+              <input
+                type="number"
+                min={1}
+                max={product.stock}
+                value={quantity}
+                onChange={e => setQuantity(Number(e.target.value))}
+              />
+            </label>
+            <button onClick={handleAddToCart} disabled={product.stock === 0}>
+              Add to Cart
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+      <RecommendationStrip title="Customers also bought" items={related} />
+    </>
   );
 }

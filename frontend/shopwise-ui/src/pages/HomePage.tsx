@@ -1,44 +1,38 @@
 import { useState, useEffect } from 'react';
-import api from '../services/api';
-import ProductList from '../components/ProductList';
-import { useCart } from '../hooks/useCart';
-import { useAuth } from '../store/AuthContext';
-import type { Product } from '../types';
+import { useNavigate } from 'react-router-dom';
+import { fetchPopular } from '../services/recommendations';
+import RecommendationStrip from '../components/RecommendationStrip';
+import SearchBar from '../components/SearchBar';
+import type { RecommendedProduct } from '../types';
 
+// Google-style landing: prominent search, then the "Popular right now"
+// strip. The full catalogue lives on /products.
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
-  const { addItem } = useCart(user?.email ? 1 : null);
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+  const [popular, setPopular] = useState<RecommendedProduct[]>([]);
 
   useEffect(() => {
-    setLoading(true);
-    api.get<Product[]>('/products', { params: { search: search || undefined } })
-      .then(res => setProducts(res.data))
-      .finally(() => setLoading(false));
-  }, [search]);
+    // Best-effort: a recommendations outage leaves the hero clean.
+    fetchPopular().then(setPopular).catch(() => setPopular([]));
+  }, []);
 
-  const handleAddToCart = async (product: Product) => {
-    if (!user) {
-      alert('Please log in to add items to your cart.');
-      return;
-    }
-    await addItem(product.id, 1);
-    alert(`${product.name} added to cart!`);
+  const handleSubmit = () => {
+    const q = query.trim();
+    navigate(q ? `/products?search=${encodeURIComponent(q)}` : '/products');
   };
 
   return (
     <div className="home-page">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
+      <div className="home-hero">
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+          onSubmit={handleSubmit}
+          autoFocus
         />
       </div>
-      {loading ? <p>Loading...</p> : <ProductList products={products} onAddToCart={handleAddToCart} />}
+      <RecommendationStrip title="Popular right now" items={popular} />
     </div>
   );
 }

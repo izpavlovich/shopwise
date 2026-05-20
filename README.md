@@ -8,6 +8,7 @@ A small e-commerce web application. Browse products, manage a cart, and place or
 |----------|-----------|
 | Frontend | React 18, TypeScript, Vite, React Router |
 | Backend  | ASP.NET Core 8 Web API, Entity Framework Core, JWT Auth |
+| Recommendations | Python 3.12, FastAPI, asyncpg |
 | Database | PostgreSQL 15 |
 
 ## Quick start
@@ -17,6 +18,8 @@ A small e-commerce web application. Browse products, manage a cart, and place or
 | Frontend | http://localhost:3000 |
 | API | http://localhost:5100 |
 | Swagger | http://localhost:5100/swagger |
+| Recommendations | http://localhost:5200 |
+| Recommendations docs | http://localhost:5200/docs |
 
 ### Dev environment (live reload)
 
@@ -49,6 +52,14 @@ docker compose up db -d
 ```bash
 cd backend/ShopWise.Api
 dotnet run
+```
+
+**Run the recommendations service:**
+```bash
+cd backend/recommendations
+pip install -r requirements-dev.txt
+export DATABASE_URL="postgresql://shopwise:shopwise123@localhost:5432/shopwise"
+uvicorn app.main:app --reload --port 5200
 ```
 
 **Run the frontend:**
@@ -84,6 +95,10 @@ Also update `init.sql` so a fresh boot reflects the same schema.
 | jane@example.com | Jane456! | customer |
 | john@example.com | John789! | customer |
 
+Seed customers `alice@example.com` … `grace@example.com` (ids 4–10) also
+exist with password `Customer1!`. They carry the bulk of the order history
+that feeds the recommendations service.
+
 ## Features
 
 - Product catalogue with category and search
@@ -92,6 +107,8 @@ Also update `init.sql` so a fresh boot reflects the same schema.
 - Order history
 - JWT-based authentication (register / login)
 - Admin: create and delete products
+- Product recommendations (Python service) — "Popular right now" on the home
+  page and "Customers also bought" on each product page
 
 ## Project layout
 
@@ -103,6 +120,8 @@ shopwise/
 │   ├── Models/          # EF Core entities
 │   ├── DTOs/            # Request / response types
 │   └── Data/            # AppDbContext
+├── backend/recommendations/
+│   └── app/             # FastAPI: routers, service, repository, schemas
 ├── frontend/shopwise-ui/
 │   ├── src/pages/       # Home, ProductDetail, Cart, Checkout, Orders, Login, Register
 │   ├── src/components/  # ProductCard, ProductList, Navbar

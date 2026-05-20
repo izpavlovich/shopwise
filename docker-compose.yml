@@ -36,6 +36,20 @@ services:
     depends_on:
       - db
 
+  recommendations:
+    build:
+      context: ./backend/recommendations
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgresql://shopwise:shopwise123@db:5432/shopwise"
+    ports:
+      - "5200:8000"
+    volumes:
+      - ./backend/recommendations:/app
+    depends_on:
+      - db
+
   frontend:
     build:
       context: ./frontend/shopwise-ui
@@ -50,6 +64,7 @@ services:
       - /app/node_modules
     depends_on:
       - api
+      - recommendations
 
   devcontainer:
     image: mcr.microsoft.com/devcontainers/base:ubuntu
@@ -57,6 +72,7 @@ services:
     depends_on:
       - db
       - api
+      - recommendations
       - frontend
 
 volumes:

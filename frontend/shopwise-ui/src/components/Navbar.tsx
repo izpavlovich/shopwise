@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav className="navbar">
       <Link to="/" className="brand">ShopWise</Link>
       <div className="nav-links">
-        <Link to="/">Products</Link>
+        <Link to="/products">Products</Link>
         {user ? (
           <>
             <Link to="/cart">Cart</Link>

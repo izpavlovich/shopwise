@@ -9,6 +9,18 @@ export interface Product {
   categoryName: string;
 }
 
+// Trimmed product as returned by the Python recommendations service.
+// `score` is set for "related" results, `unitsSold` for "popular".
+export interface RecommendedProduct {
+  id: number;
+  categoryId: number;
+  name: string;
+  price: number;
+  imageUrl: string | null;
+  score?: number;
+  unitsSold?: number;
+}
+
 export interface CartItem {
   productId: number;
   productName: string;

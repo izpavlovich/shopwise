@@ -163,3 +163,101 @@ INSERT INTO orders (user_id, status, total_amount) VALUES
 INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
     (4, 11, 1, 84.99),
     (5, 8,  1, 19.99);
+
+-- ------------------------------------------------------------
+-- Extra customers + order history so the recommendations
+-- service has real co-purchase and popularity signal.
+-- Passwords are MD5 hashes; all of these share password Customer1!
+-- ------------------------------------------------------------
+INSERT INTO users (email, password_hash, full_name, role) VALUES
+    ('alice@example.com', md5('Customer1!'), 'Alice Brown',  'customer'),  -- id 4
+    ('bob@example.com',   md5('Customer1!'), 'Bob Carter',   'customer'),  -- id 5
+    ('carol@example.com', md5('Customer1!'), 'Carol Diaz',   'customer'),  -- id 6
+    ('dave@example.com',  md5('Customer1!'), 'Dave Evans',   'customer'),  -- id 7
+    ('erin@example.com',  md5('Customer1!'), 'Erin Foster',  'customer'),  -- id 8
+    ('frank@example.com', md5('Customer1!'), 'Frank Green',  'customer'),  -- id 9
+    ('grace@example.com', md5('Customer1!'), 'Grace Hill',   'customer');  -- id 10
+
+-- Orders 6..41. Rows are listed in id order so the SERIAL ids match the
+-- order_items references below. A couple are 'cancelled' on purpose — the
+-- recommendation queries must ignore those.
+INSERT INTO orders (user_id, status, total_amount) VALUES
+    ( 2, 'delivered', 254.97),  -- 6   electronics dev kit
+    ( 3, 'delivered', 219.98),  -- 7
+    ( 4, 'shipped',   224.97),  -- 8
+    ( 5, 'delivered', 219.96),  -- 9
+    ( 6, 'delivered', 124.98),  -- 10
+    ( 4, 'delivered', 189.98),  -- 11
+    ( 7, 'pending',   199.98),  -- 12
+    ( 8, 'delivered', 144.98),  -- 13
+    ( 3, 'shipped',   314.96),  -- 14
+    ( 9, 'delivered', 249.98),  -- 15  fitness
+    ( 2, 'delivered', 124.97),  -- 16  tech books
+    ( 3, 'delivered',  84.98),  -- 17
+    ( 4, 'delivered',  74.98),  -- 18
+    ( 5, 'shipped',    74.98),  -- 19
+    ( 6, 'delivered', 169.96),  -- 20
+    ( 7, 'delivered',  89.98),  -- 21
+    ( 8, 'pending',    64.98),  -- 22
+    ( 2, 'delivered',  48.97),  -- 23
+    (10, 'delivered', 109.97),  -- 24
+    ( 9, 'shipped',    69.98),  -- 25
+    ( 3, 'delivered',  94.97),  -- 26  clothing
+    ( 4, 'delivered', 114.97),  -- 27
+    ( 5, 'delivered',  94.98),  -- 28
+    ( 6, 'shipped',    74.97),  -- 29
+    ( 7, 'delivered',  99.98),  -- 30
+    ( 8, 'delivered',  89.95),  -- 31
+    (10, 'pending',    84.98),  -- 32
+    ( 2, 'delivered', 284.98),  -- 33  cross-category
+    ( 9, 'delivered',  74.98),  -- 34
+    ( 4, 'cancelled',  89.99),  -- 35  cancelled -> ignored
+    ( 6, 'cancelled',  74.98),  -- 36  cancelled -> ignored
+    ( 5, 'delivered', 234.97),  -- 37
+    ( 3, 'delivered',  51.98),  -- 38
+    ( 7, 'shipped',   249.98),  -- 39
+    (10, 'delivered',  46.97),  -- 40
+    ( 8, 'delivered', 254.97);  -- 41
+
+INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
+    -- Electronics: headphones/hub/keyboard/webcam frequently bought together
+    ( 6,  1, 1,  89.99), ( 6,  2, 1, 34.99), ( 6,  3, 1, 129.99),
+    ( 7,  1, 1,  89.99), ( 7,  3, 1, 129.99),
+    ( 8,  2, 1,  34.99), ( 8,  3, 1, 129.99), ( 8,  4, 1, 59.99),
+    ( 9,  1, 1,  89.99), ( 9,  2, 2, 34.99), ( 9,  4, 1, 59.99),
+    (10,  1, 1,  89.99), (10,  2, 1, 34.99),
+    (11,  3, 1, 129.99), (11,  4, 1, 59.99),
+    (12,  1, 1,  89.99), (12,  6, 1, 109.99),
+    (13,  2, 1,  34.99), (13,  6, 1, 109.99),
+    (14,  1, 1,  89.99), (14,  2, 1, 34.99), (14, 3, 1, 129.99), (14, 4, 1, 59.99),
+    (15,  5, 1, 199.99), (15,  7, 1,  49.99),
+    -- Books: Clean Code / Pragmatic / Refactoring / DDIA / System Design
+    (16, 14, 1,  34.99), (16, 16, 1, 39.99), (16, 18, 1, 49.99),
+    (17, 14, 1,  34.99), (17, 18, 1, 49.99),
+    (18, 14, 1,  34.99), (18, 16, 1, 39.99),
+    (19, 15, 1,  44.99), (19, 20, 1, 29.99),
+    (20, 14, 1,  34.99), (20, 15, 1, 44.99), (20, 16, 1, 39.99), (20, 18, 1, 49.99),
+    (21, 16, 1,  39.99), (21, 18, 1, 49.99),
+    (22, 14, 1,  34.99), (22, 20, 1, 29.99),
+    (23, 17, 2,  16.99), (23, 19, 1, 14.99),
+    (24, 14, 1,  34.99), (24, 15, 1, 44.99), (24, 20, 1, 29.99),
+    (25, 16, 1,  39.99), (25, 20, 1, 29.99),
+    -- Clothing: tee / jeans / hoodie / beanie
+    (26,  8, 2,  19.99), (26,  9, 1, 54.99),
+    (27,  8, 1,  19.99), (27,  9, 1, 54.99), (27, 10, 1, 39.99),
+    (28,  9, 1,  54.99), (28, 10, 1, 39.99),
+    (29,  8, 1,  19.99), (29, 10, 1, 39.99), (29, 12, 1, 14.99),
+    (30, 11, 1,  84.99), (30, 12, 1, 14.99),
+    (31,  8, 3,  19.99), (31, 12, 2, 14.99),
+    (32,  9, 1,  54.99), (32, 13, 1, 29.99),
+    (33, 11, 1,  84.99), (33,  5, 1, 199.99),
+    (34,  8, 1,  19.99), (34,  9, 1, 54.99),
+    -- Cancelled (must NOT contribute to recommendations)
+    (35,  1, 1,  89.99),
+    (36, 14, 1,  34.99), (36, 16, 1, 39.99),
+    -- More cross-category mixes
+    (37,  6, 1, 109.99), (37,  2, 1, 34.99), (37,  1, 1, 89.99),
+    (38, 17, 1,  16.99), (38, 14, 1, 34.99),
+    (39,  7, 1,  49.99), (39,  5, 1, 199.99),
+    (40, 19, 2,  14.99), (40, 17, 1, 16.99),
+    (41,  3, 1, 129.99), (41,  1, 1, 89.99), (41,  2, 1, 34.99);
